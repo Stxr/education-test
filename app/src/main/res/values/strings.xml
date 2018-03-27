@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">职教考试系统</string>
+    <string name="title_activity_main">职教考试系统</string>
+    <string name="practice">题库练习</string>
+    <string name="exam">职业考试</string>
+    <string name="title_account">个人中心</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string name="find_key">找回密码</string>
+    <string name="user_sign_in">用户登录</string>
+    <string name="user_sign_up">用户注册</string>
+    <string name="password_hint">请输入用户密码</string>
+    <string name="id_hint">请输入用户名/手机/邮箱</string>
+    <string name="sign_in">登录</string>
+    <string name="sign_up_now">立即注册</string>
+    <string name="sign_up">注册</string>
+    <string name="success_sign_up">注册成功</string>
+    <string name="error_sign_up">输入有误，请重新输入</string>
+    <string name="everyone_is_shopping">--大家都在团--</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
