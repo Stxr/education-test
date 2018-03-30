@@ -17,6 +17,7 @@ public class PracticeFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        //加载布局
         View view = inflater.inflate(R.layout.fragment_practice, container, false);
         return view;
     }

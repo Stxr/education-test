@@ -16,6 +16,7 @@ public class AccountFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+        //加载布局
         View view = inflater.inflate(R.layout.fragment_account, container, false);
         return view;
     }
