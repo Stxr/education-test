@@ -1,5 +1,6 @@
 package com.stxr.teacher_test.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -75,7 +76,14 @@ public class SignInActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SIGN_IN_REQUEST_CODE && resultCode == SignUpActivity.SIGN_UP_SUCCESS_RESULT_CODE) {
-            edt_id.setText(data.getStringExtra(SignUpActivity.ID));
+            if (data != null) {
+                edt_id.setText(data.getStringExtra(SignUpActivity.ID));
+            }
         }
+    }
+
+    public static void newInstance(Context context) {
+        Intent intent = new Intent(context, SignInActivity.class);
+        context.startActivity(intent);
     }
 }

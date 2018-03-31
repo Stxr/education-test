@@ -1,4 +1,4 @@
-package com.stxr.teacher_test.fragments;
+package com.stxr.teacher_test.fragments.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

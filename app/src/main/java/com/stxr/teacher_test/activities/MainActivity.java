@@ -13,13 +13,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.stxr.teacher_test.R;
-import com.stxr.teacher_test.fragments.AccountFragment;
-import com.stxr.teacher_test.fragments.ExamFragment;
-import com.stxr.teacher_test.fragments.PracticeFragment;
+import com.stxr.teacher_test.fragments.home.AccountFragment;
+import com.stxr.teacher_test.fragments.home.ExamFragment;
+import com.stxr.teacher_test.fragments.home.PracticeFragment;
+import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private List<Fragment> fragments = new ArrayList<>();
     private BottomNavigationView navigation;
+    public static long FIRST_TIME = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +74,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initFragments() {
-        fragments.add(new AccountFragment());
-        fragments.add(new ExamFragment());
         fragments.add(new PracticeFragment());
+        fragments.add(new ExamFragment());
+        fragments.add(new AccountFragment());
     }
 
     /**
@@ -105,4 +106,24 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
+
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - FIRST_TIME < 2000) {
+            super.onBackPressed();
+        } else {
+            FIRST_TIME = System.currentTimeMillis();
+            ToastUtil.show(this, "再按一次返回键退出");
+        }
+    }
+
+    //    @Override
+//    public boolean onKeyUp(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            ToastUtil.show(this, "在按一次返回键退出");
+//            if()
+//        }
+//        return super.onKeyUp(keyCode, event);
+//    }
+//
 }
