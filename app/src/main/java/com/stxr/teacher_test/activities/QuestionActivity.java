@@ -53,7 +53,7 @@ public class QuestionActivity extends AppCompatActivity {
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return QuestionFragment.newInstance(questions.get(position).toString());
+                return QuestionFragment.newInstance(questions.get(position));
             }
 
             @Override
@@ -87,6 +87,14 @@ public class QuestionActivity extends AppCompatActivity {
     private Question parseQuestion(String json) {
         Gson gson = new Gson();
         Question question = gson.fromJson(json, Question.class);
+//        Question question = new Question();
+//        question.setQuestion("2323");
+//        question.setAnswer("12");
+//        List<String> list = new ArrayList<>();
+//        list.add("12");
+//        list.add("12");
+//        list.add("12");
+//        question.setChoices(list);
         Log.e(TAG, "parseQuestion: " + question.toString());
         return question;
     }

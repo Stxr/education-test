@@ -2,11 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     android:orientation="vertical">
 
     <TextView
+        android:textSize="16sp"
+        android:gravity="center"
         android:text="hahahh"
-        android:id="@+id/tv_question"
+        android:id="@+id/tv_question_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
+    <RadioGroup
+        android:id="@+id/rg_question"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </RadioGroup>
 </LinearLayout>
