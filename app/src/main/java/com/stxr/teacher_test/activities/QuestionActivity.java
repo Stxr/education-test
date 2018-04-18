@@ -5,23 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.entities.Question;
 import com.stxr.teacher_test.entities.QuestionBank;
+import com.stxr.teacher_test.fragments.IQuestionCallback;
 import com.stxr.teacher_test.fragments.QuestionFragment;
+import com.stxr.teacher_test.view.MyViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
@@ -30,11 +35,19 @@ import cn.bmob.v3.listener.FindListener;
  * Created by stxr on 2018/3/31.
  */
 
-public class QuestionActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity implements IQuestionCallback {
     @BindView(R.id.vp_question)
-    ViewPager viewPager;
+    MyViewPager viewPager;
+    @BindView(R.id.btn_confirm)
+    Button btn_confirm;
     private String TAG = "QuestionActivity";
+
     private List<Question> questionList = new ArrayList<>();
+    private QuestionFragment fragment;
+    private Question question;
+    private boolean isAnswerTrue;
+    private TextView tv_description;
+    private RadioGroup rg_question;
 
     @Override
 
@@ -50,10 +63,12 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void setAdapter(final List<Question> questions) {
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return QuestionFragment.newInstance(questions.get(position));
+                question = questions.get(position);
+                fragment = QuestionFragment.newInstance(question);
+                return fragment;
             }
 
             @Override
@@ -61,6 +76,28 @@ public class QuestionActivity extends AppCompatActivity {
                 return questions.size();
             }
         });
+        viewPager.setCanScroll(false);
+    }
+    @OnClick(R.id.btn_confirm)
+    void onClick() {
+        if (btn_confirm.getText().equals("确定")) {
+            if (isAnswerTrue) {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+            } else {
+                setRadioGroupCheckable(rg_question, false);
+                tv_description.setVisibility(View.VISIBLE);
+                btn_confirm.setText("下一题");
+            }
+        } else {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+            btn_confirm.setText("确定");
+        }
+    }
+
+    void setRadioGroupCheckable(RadioGroup radioGroup, boolean checkable) {
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            radioGroup.getChildAt(i).setEnabled(checkable);
+        }
     }
 
     void query() {
@@ -102,5 +139,16 @@ public class QuestionActivity extends AppCompatActivity {
     public static void newInstance(Context context) {
         Intent intent = new Intent(context, QuestionActivity.class);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void answer(boolean isRight,View... views) {
+        isAnswerTrue = isRight;
+        if (views[0] instanceof TextView) {
+            tv_description = (TextView) views[0];
+        }
+        if (views[1] instanceof RadioGroup) {
+            rg_question = (RadioGroup) views[1];
+        }
     }
 }

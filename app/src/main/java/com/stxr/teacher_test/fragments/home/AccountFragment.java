@@ -8,6 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stxr.teacher_test.R;
+import com.stxr.teacher_test.activities.SignInActivity;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import cn.bmob.v3.BmobUser;
 
 /**
  * 用户管理Fragment
@@ -18,7 +24,14 @@ public class AccountFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         //加载布局
         View view = inflater.inflate(R.layout.fragment_account, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
+    @OnClick(R.id.btn_quit)
+    void onClick() {
+        BmobUser.logOut();
+        SignInActivity.newInstance(getActivity());
+        getActivity().finish();
+    }
 }

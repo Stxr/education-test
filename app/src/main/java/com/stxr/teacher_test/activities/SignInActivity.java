@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.entities.MyUser;
+import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.util.logging.LogManager;
 
@@ -39,7 +40,6 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         ButterKnife.bind(this);
-
     }
 
     /**
@@ -54,7 +54,7 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void done(MyUser myUser, BmobException e) {
                 if (e != null) {
-                    Log.e(TAG, e.toString());
+                    ToastUtil.show(SignInActivity.this, e.getMessage());
                 } else {
                     MainActivity.newInstance(SignInActivity.this);
                     finish();

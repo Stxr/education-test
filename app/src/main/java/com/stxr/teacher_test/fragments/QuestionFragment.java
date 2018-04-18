@@ -1,5 +1,6 @@
 package com.stxr.teacher_test.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,14 +11,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.entities.Question;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,12 +30,28 @@ public class QuestionFragment extends Fragment {
     TextView tv_question_title;
 
     @BindView(R.id.rg_question)
-    RadioGroup rb_question;
+    public RadioGroup rb_question;
+
+    @BindView(R.id.tv_description)
+    public TextView tv_description;
+    private Question question;
+    private List<Question.Choices> choices;
+
+    private  IQuestionCallback callback;
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof IQuestionCallback) {
+            callback = (IQuestionCallback) context;
+        }
     }
 
     @Nullable
@@ -48,27 +61,38 @@ public class QuestionFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_question, null);
         ButterKnife.bind(this, view);
         Bundle arguments = getArguments();
-        Question question = (Question) arguments.getSerializable(QUESTION);
+        question = (Question) arguments.getSerializable(QUESTION);
         questionAdapter(question);
         return view;
     }
 
-    private void questionAdapter(Question question) {
+    private void questionAdapter(final Question question) {
         tv_question_title.setText(question.getQuestion());
+        tv_description.setText(question.getDescription());
+        tv_description.setVisibility(View.GONE);
         //获取选项
-        Gson gson = new Gson();
-        List<Question.Choices> choices = Arrays.asList(question.getChoices());
+        choices = Arrays.asList(question.getChoices());
 
         //打乱选项顺序，确保每次出现的次序都不一样
-        Collections.shuffle(choices);
+       // Collections.shuffle(choices);
         for (int i = 0; i < choices.size(); i++) {
             RadioButton button = new RadioButton(getActivity());
             button.setId(i);
             button.setText(choices.get(i).toString());
             rb_question.addView(button);
         }
+        rb_question.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton button = QuestionFragment.this.getActivity().findViewById(checkedId);
+                if (!button.getText().equals(question.getAnswer())) {
+                    callback.answer(false,tv_description,rb_question);
+                } else {
+                    callback.answer(true,tv_description,rb_question);
+                }
+            }
+        });
     }
-
 
     public static QuestionFragment newInstance(Question question) {
         Bundle bundle = new Bundle();

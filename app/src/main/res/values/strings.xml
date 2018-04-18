@@ -28,4 +28,6 @@
     <string name="already_sign_up">已经注册了？请登录</string>
     <string name="username_already_taken">用户名已被注册</string>
     <string name="email_already_taken">邮箱已被注册</string>
+    <string name="btn_quit">退出登录</string>
+    <string name="confirm">确定</string>
 </resources>
