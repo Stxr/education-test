@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.stxr.teacher_test.R;
+import com.stxr.teacher_test.entities.Choices;
 import com.stxr.teacher_test.entities.Question;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.LogManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,20 +38,22 @@ public class QuestionFragment extends Fragment {
     @BindView(R.id.tv_description)
     public TextView tv_description;
     private Question question;
-    private List<Question.Choices> choices;
+    private List<Choices> choices;
 
     private  IQuestionCallback callback;
-
+    private String TAG="CreateQuestionFragment";
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate() called with: savedInstanceState = [" + savedInstanceState + "]");
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Log.d(TAG, "onAttach() called with: context = [" + context + "]");
         if (context instanceof IQuestionCallback) {
             callback = (IQuestionCallback) context;
         }
@@ -57,7 +62,7 @@ public class QuestionFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        Log.d(TAG, "onCreateView() called with: inflater = [" + inflater + "], container = [" + container + "], savedInstanceState = [" + savedInstanceState + "]");
         View view = inflater.inflate(R.layout.fragment_question, null);
         ButterKnife.bind(this, view);
         Bundle arguments = getArguments();
@@ -81,6 +86,9 @@ public class QuestionFragment extends Fragment {
             button.setText(choices.get(i).toString());
             rb_question.addView(button);
         }
+        /**
+         * 选择选项监听
+         */
         rb_question.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -94,6 +102,11 @@ public class QuestionFragment extends Fragment {
         });
     }
 
+    /**
+     * 入口
+     * @param question
+     * @return
+     */
     public static QuestionFragment newInstance(Question question) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(QUESTION, question);

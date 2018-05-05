@@ -8,10 +8,8 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 
 import com.stxr.teacher_test.R;
-import com.stxr.teacher_test.entities.MyUser;
-
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobUser;
+import com.stxr.teacher_test.admin.AdminActivity;
+import com.stxr.teacher_test.entities.Student;
 
 /**
  * Created by stxr on 2018/3/31.
@@ -28,10 +26,10 @@ public class SplashActivity extends Activity {
             super.handleMessage(msg);
             if (msg.what == WHAT) {
                 //判断跳转
-                if (BmobUser.getCurrentUser(MyUser.class) != null) {
-                    MainActivity.newInstance(SplashActivity.this);
+                if (Student.getCurrentUser(SplashActivity.this) != null) {
+                    startActivity(StudentActivity.newInstance(SplashActivity.this));
                 } else {
-                    SignInActivity.newInstance(SplashActivity.this);
+                    startActivity(AdminActivity.newInstance(SplashActivity.this));
                 }
                 finish();
             }

@@ -69,4 +69,10 @@ public class ShareUtil {
         editor.remove(key);
         editor.apply();
     }
+
+    public static void clear(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(NAME, Context.MODE_PRIVATE).edit();
+        editor.clear();
+        editor.apply();
+    }
 }

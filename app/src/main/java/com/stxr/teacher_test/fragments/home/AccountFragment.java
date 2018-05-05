@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.stxr.teacher_test.R;
-import com.stxr.teacher_test.activities.SignInActivity;
+import com.stxr.teacher_test.admin.AdminActivity;
+import com.stxr.teacher_test.entities.Student;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
@@ -30,8 +30,8 @@ public class AccountFragment extends Fragment {
 
     @OnClick(R.id.btn_quit)
     void onClick() {
-        BmobUser.logOut();
-        SignInActivity.newInstance(getActivity());
+        Student.logOut(getActivity());
+       startActivity( AdminActivity.newInstance(getActivity()));
         getActivity().finish();
     }
 }

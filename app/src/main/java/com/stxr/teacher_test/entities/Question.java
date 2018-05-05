@@ -3,21 +3,25 @@ package com.stxr.teacher_test.entities;
 import java.io.Serializable;
 import java.util.Arrays;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by stxr on 2018/3/31.
  */
 
-public class Question implements Serializable{
+public class Question extends BmobObject {
     private String question;
     private String answer;
     private Choices[] choices;
     private String description;
+    private boolean isSelection;//是否是选择题
 
 
     public void setChoices(Choices[] choices) {
         this.choices = choices;
     }
-    public Choices[] getChoices() {
+
+    public com.stxr.teacher_test.entities.Choices[] getChoices() {
         return choices;
     }
 
@@ -29,14 +33,14 @@ public class Question implements Serializable{
         this.description = description;
     }
 
-    public class Choices {
-        public String choice;
-
-        @Override
-        public String toString() {
-            return choice;
-        }
+    public boolean isSelection() {
+        return isSelection;
     }
+
+    public void setSelection(boolean selection) {
+        isSelection = selection;
+    }
+
 
 
     public String getQuestion() {

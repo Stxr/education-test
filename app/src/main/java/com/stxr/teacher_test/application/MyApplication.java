@@ -14,6 +14,6 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Bmob.initialize(this, "a9adce08cbd4f55b2b583f4779076ff6");
+        Bmob.initialize(this, "673e63d24c26f34e71a10df0ef5d5074");
     }
 }

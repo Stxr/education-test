@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -63,7 +64,7 @@ public class QuestionActivity extends AppCompatActivity implements IQuestionCall
     }
 
     private void setAdapter(final List<Question> questions) {
-        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 question = questions.get(position);
@@ -78,6 +79,7 @@ public class QuestionActivity extends AppCompatActivity implements IQuestionCall
         });
         viewPager.setCanScroll(false);
     }
+    //答题确定按钮
     @OnClick(R.id.btn_confirm)
     void onClick() {
         if (btn_confirm.getText().equals("确定")) {
@@ -124,14 +126,6 @@ public class QuestionActivity extends AppCompatActivity implements IQuestionCall
     private Question parseQuestion(String json) {
         Gson gson = new Gson();
         Question question = gson.fromJson(json, Question.class);
-//        Question question = new Question();
-//        question.setQuestion("2323");
-//        question.setAnswer("12");
-//        List<String> list = new ArrayList<>();
-//        list.add("12");
-//        list.add("12");
-//        list.add("12");
-//        question.setChoices(list);
         Log.e(TAG, "parseQuestion: " + question.toString());
         return question;
     }
@@ -150,5 +144,17 @@ public class QuestionActivity extends AppCompatActivity implements IQuestionCall
         if (views[1] instanceof RadioGroup) {
             rg_question = (RadioGroup) views[1];
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy() called");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume() called");
     }
 }

@@ -42,7 +42,7 @@ public class PracticeFragment extends Fragment {
 
 //    void practice() {
 //        getFragmentManager().beginTransaction()
-//                .replace(R.layout.activity_question, new QuestionFragment())
+//                .replace(R.layout.activity_question, new CreateQuestionFragment())
 //                .commit();
 //    }
 

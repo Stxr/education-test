@@ -16,12 +16,13 @@ import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.fragments.home.AccountFragment;
 import com.stxr.teacher_test.fragments.home.ExamFragment;
 import com.stxr.teacher_test.fragments.home.PracticeFragment;
+import com.stxr.teacher_test.utils.ShareUtil;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class StudentActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
     private ViewPager viewPager;
@@ -57,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -72,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    /**
+     * 缓存账户
+     */
+
 
     private void initFragments() {
         fragments.add(new PracticeFragment());
@@ -102,9 +107,9 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-    public static void newInstance(Context context) {
-        Intent intent = new Intent(context, MainActivity.class);
-        context.startActivity(intent);
+    public static Intent newInstance(Context context) {
+        Intent intent = new Intent(context, StudentActivity.class);
+        return intent;
     }
 
     @Override
@@ -117,13 +122,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //    @Override
-//    public boolean onKeyUp(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            ToastUtil.show(this, "在按一次返回键退出");
-//            if()
-//        }
-//        return super.onKeyUp(keyCode, event);
-//    }
-//
 }
