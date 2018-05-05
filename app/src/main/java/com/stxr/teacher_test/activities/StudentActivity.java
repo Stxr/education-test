@@ -9,10 +9,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.stxr.teacher_test.R;
+import com.stxr.teacher_test.entities.Group;
+import com.stxr.teacher_test.entities.Paper;
+import com.stxr.teacher_test.entities.Practice;
+import com.stxr.teacher_test.entities.Student;
 import com.stxr.teacher_test.fragments.home.AccountFragment;
 import com.stxr.teacher_test.fragments.home.ExamFragment;
 import com.stxr.teacher_test.fragments.home.PracticeFragment;
@@ -22,8 +27,16 @@ import com.stxr.teacher_test.utils.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
+
 public class StudentActivity extends AppCompatActivity {
 
+    private static final String TAG = "StudentActivity";
     private TextView mTextMessage;
     private ViewPager viewPager;
     private List<Fragment> fragments = new ArrayList<>();
@@ -83,6 +96,8 @@ public class StudentActivity extends AppCompatActivity {
         fragments.add(new ExamFragment());
         fragments.add(new AccountFragment());
     }
+
+
 
     /**
      * 初始化控件

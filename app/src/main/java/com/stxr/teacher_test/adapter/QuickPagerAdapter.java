@@ -13,6 +13,7 @@ import java.util.List;
 public class QuickPagerAdapter<T extends View> extends PagerAdapter {
     private List<T> list;
 
+
     public QuickPagerAdapter(List<T> list) {
         this.list = list;
     }
@@ -37,4 +38,7 @@ public class QuickPagerAdapter<T extends View> extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         super.destroyItem(container, position, object);
     }
+
+
+
 }

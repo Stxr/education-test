@@ -12,7 +12,7 @@ import android.widget.EditText;
 import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.entities.Admin;
 import com.stxr.teacher_test.entities.Announcement;
-import com.stxr.teacher_test.fragments.BaseFragment;
+import com.stxr.teacher_test.fragments.SingleBaseFragment;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -24,7 +24,7 @@ import cn.bmob.v3.listener.SaveListener;
  * Created by stxr on 2018/5/4.
  */
 
-public class AnnouncementFragment extends BaseFragment {
+public class AnnouncementFragment extends SingleBaseFragment {
 
     @BindView(R.id.edt_title)
     EditText edt_title;

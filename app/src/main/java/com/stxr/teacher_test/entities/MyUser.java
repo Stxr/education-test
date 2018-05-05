@@ -11,6 +11,7 @@ import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 
 /**
  * Created by stxr on 2018/5/4.
@@ -63,8 +64,21 @@ public class MyUser extends BmobObject {
         ShareUtil.put(context, "objectId", student.getObjectId());
         ShareUtil.put(context, "username", student.getUsername());
         ShareUtil.put(context, "password", student.getPassword());
+        ShareUtil.put(context, "groupId", student.getGroup().getObjectId());
     }
 
+    /**
+     * 更新缓存数据
+     */
+    protected void updateCache(final Context context, String studentId) {
+        BmobQuery<Student> query = new BmobQuery<>();
+        query.getObject(studentId, new QueryListener<Student>() {
+            @Override
+            public void done(Student student, BmobException e) {
+                cache(context, student);
+            }
+        });
+    }
 
     public interface SaveListener<T> {
         void done(T t, BmobException e);

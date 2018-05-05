@@ -26,7 +26,7 @@ import cn.bmob.v3.listener.SaveListener;
  * Created by stxr on 2018/5/3.
  */
 
-public class SignInFragment extends BaseFragment {
+public class SignInFragment extends SingleBaseFragment {
 
     public static final int SIGN_IN_REQUEST_CODE = 110;
     private static final String TAG = "OldSignInActivity";
@@ -42,6 +42,7 @@ public class SignInFragment extends BaseFragment {
 
     @Override
     protected void initData(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.initData(inflater,container,savedInstanceState);
         Bundle arguments = getArguments();
         accountType = (AccountType) arguments.getSerializable(TYPE);
         if (accountType.equals(AccountType.ADMINISTRATOR)) {

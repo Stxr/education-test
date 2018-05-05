@@ -7,12 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.RelativeLayout;
 
 import com.stxr.teacher_test.R;
-import com.stxr.teacher_test.entities.ExamDate;
+import com.stxr.teacher_test.entities.Exam;
 import com.stxr.teacher_test.entities.Group;
-import com.stxr.teacher_test.fragments.BaseFragment;
+import com.stxr.teacher_test.entities.Paper;
+import com.stxr.teacher_test.fragments.SignInFragment;
+import com.stxr.teacher_test.fragments.SingleBaseFragment;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.text.SimpleDateFormat;
@@ -32,9 +33,10 @@ import cn.bmob.v3.listener.SaveListener;
  * Created by stxr on 2018/5/4.
  */
 
-public class AdminFragment extends BaseFragment {
+public class AdminFragment extends SingleBaseFragment {
 
-    private AppCompatSpinner spinner;
+    private AppCompatSpinner sp_group;
+    private AppCompatSpinner sp_paper;
 
     @Override
     public int layoutResId() {
@@ -80,14 +82,16 @@ public class AdminFragment extends BaseFragment {
 
     private void logOut() {
         BmobUser.logOut();
-        activity.popBackStack();
+        activity.replaceFragment(SignInFragment.newInstance(AccountType.USER));
     }
 
     private void createDialog() {
         View view = LayoutInflater.from(activity).inflate(R.layout.dialog_exam_date, null);
         final DatePicker datePicker = view.findViewById(R.id.dp_exam_date);
-        spinner = view.findViewById(R.id.sp_group);
-        updateGroup(spinner);
+        sp_group = view.findViewById(R.id.sp_group);
+        sp_paper = view.findViewById(R.id.sp_paper);
+        updateGroup(sp_group);
+        updatePaper(sp_paper);
         new AlertDialog.Builder(activity)
                 .setTitle("设置考试日期")
                 .setView(view)
@@ -99,10 +103,11 @@ public class AdminFragment extends BaseFragment {
                         int dayOfMonth = datePicker.getDayOfMonth();
                         Date date = new GregorianCalendar(year, month, dayOfMonth).getTime();
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE);
-                        ExamDate examDate = new ExamDate();
-                        examDate.setGroup((Group) spinner.getSelectedItem());
-                        examDate.setDate(format.format(date));
-                        examDate.save(new SaveListener<String>() {
+                        Exam exam = new Exam();
+                        exam.setGroup((Group) sp_group.getSelectedItem());
+                        exam.setPaper((Paper) sp_paper.getSelectedItem());
+                        exam.setDate(format.format(date));
+                        exam.save(new SaveListener<String>() {
                             @Override
                             public void done(String s, BmobException e) {
                                 if (e == null) {
@@ -110,12 +115,23 @@ public class AdminFragment extends BaseFragment {
                                 }
                             }
                         });
-
                     }
                 })
                 .setNegativeButton("取消",null)
                 .create()
                 .show();
+    }
+
+    private void updatePaper(final AppCompatSpinner sp_paper) {
+        BmobQuery<Paper> query = new BmobQuery<>();
+        query.findObjects(new FindListener<Paper>() {
+            @Override
+            public void done(List<Paper> list, BmobException e) {
+                ArrayAdapter<Paper> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, list);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp_paper.setAdapter(adapter);
+            }
+        });
     }
 
     private void updateGroup(final AppCompatSpinner spinner) {

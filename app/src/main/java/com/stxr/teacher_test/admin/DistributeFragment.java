@@ -2,7 +2,6 @@ package com.stxr.teacher_test.admin;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -12,7 +11,7 @@ import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.entities.Group;
 import com.stxr.teacher_test.entities.Paper;
 import com.stxr.teacher_test.entities.Student;
-import com.stxr.teacher_test.fragments.BaseFragment;
+import com.stxr.teacher_test.fragments.SingleBaseFragment;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.util.List;
@@ -29,7 +28,7 @@ import cn.bmob.v3.listener.UpdateListener;
  * Created by stxr on 2018/5/4.
  */
 
-public class DistributeFragment extends BaseFragment {
+public class DistributeFragment extends SingleBaseFragment {
     @BindView(R.id.sp_group1)
     AppCompatSpinner sp_group1;
     @BindView(R.id.sp_group2)
@@ -92,11 +91,11 @@ public class DistributeFragment extends BaseFragment {
         Group group2 = (Group) sp_group2.getSelectedItem();
         Student student = (Student) sp_student.getSelectedItem();
         BmobRelation relation = new BmobRelation();
-        relation.add(group1);
-        paper.setOwn(relation);
+        relation.add(paper);
+        group1.setPapers(relation);
         //一个学生只能在一个组
         student.setGroup(group2);
-        paper.update(new UpdateListener() {
+        group1.update(new UpdateListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null) {

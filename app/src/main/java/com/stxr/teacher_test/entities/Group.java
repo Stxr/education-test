@@ -1,6 +1,7 @@
 package com.stxr.teacher_test.entities;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * Created by stxr on 2018/5/4.\
@@ -10,6 +11,7 @@ import cn.bmob.v3.BmobObject;
 public class Group extends BmobObject {
     private String name;
     private Admin admin;
+    private BmobRelation papers;
     public Group() {
 
     }
@@ -37,4 +39,13 @@ public class Group extends BmobObject {
     public String toString() {
         return name;
     }
+
+    public BmobRelation getPapers() {
+        return papers;
+    }
+
+    public void setPapers(BmobRelation papers) {
+        this.papers = papers;
+    }
+
 }

@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="16dp"
     android:orientation="vertical">
-    <Button
-        android:text="测试"
-        android:id="@+id/btn_test"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_show_question"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"/>
 </LinearLayout>

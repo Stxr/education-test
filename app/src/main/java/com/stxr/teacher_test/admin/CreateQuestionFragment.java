@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSpinner;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,32 +16,29 @@ import android.widget.RadioButton;
 
 import com.google.gson.Gson;
 import com.stxr.teacher_test.R;
-import com.stxr.teacher_test.entities.Admin;
 import com.stxr.teacher_test.entities.Choices;
-import com.stxr.teacher_test.entities.Group;
 import com.stxr.teacher_test.entities.Paper;
 import com.stxr.teacher_test.entities.Question;
 import com.stxr.teacher_test.entities.QuestionBank;
-import com.stxr.teacher_test.fragments.BaseFragment;
+import com.stxr.teacher_test.fragments.SingleBaseFragment;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stxr on 2018/5/4.
  */
 
-public class CreateQuestionFragment extends BaseFragment {
+public class CreateQuestionFragment extends SingleBaseFragment {
     @BindView(R.id.edt_question_title)
     EditText edt_question_title;
     @BindView(R.id.edt_question_option1)
@@ -191,20 +187,28 @@ public class CreateQuestionFragment extends BaseFragment {
             Gson gson = new Gson();
             String s = gson.toJson(question);
 
-            QuestionBank questionBank = new QuestionBank();
+            final QuestionBank questionBank = new QuestionBank();
             questionBank.setQuestion(s);
-            BmobRelation relation = new BmobRelation();
-            relation.add(spinner.getSelectedItem());
-            questionBank.setPaper(relation);
-
+            final Paper paper = (Paper) spinner.getSelectedItem();
             questionBank.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
                     if (e == null) {
-                        ToastUtil.show(activity, "添加成功");
+                        BmobRelation relation = new BmobRelation();
+                        relation.add(questionBank);
+                        paper.setQuestion(relation);
+                        paper.update(new UpdateListener() {
+                            @Override
+                            public void done(BmobException e) {
+                                if (e == null) {
+                                    ToastUtil.show(activity, "添加成功");
+                                }
+                            }
+                        });
                     }
                 }
             });
+
         } else {
             ToastUtil.show(activity,"信息填写不正确");
         }

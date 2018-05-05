@@ -1,7 +1,6 @@
 package com.stxr.teacher_test.admin;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSpinner;
@@ -12,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,28 +20,24 @@ import com.stxr.teacher_test.entities.Admin;
 import com.stxr.teacher_test.entities.Group;
 import com.stxr.teacher_test.entities.MyUser;
 import com.stxr.teacher_test.entities.Student;
-import com.stxr.teacher_test.fragments.BaseFragment;
+import com.stxr.teacher_test.fragments.SingleBaseFragment;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.BmobRole;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stxr on 2018/5/3.
  */
 
-public class SignUpFragment extends BaseFragment {
+public class SignUpFragment extends SingleBaseFragment {
     @BindView(R.id.edt_id)
     EditText edt_name;
     @BindView(R.id.edt_password)

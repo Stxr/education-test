@@ -15,35 +15,39 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 /**
- * Created by stxr on 2018/5/5.
+ * Created by stxr on 2018/5/3.
  */
 
-public abstract class BaseFragment extends Fragment {
-    protected View rootView;
-    private Unbinder unbinder;
-    protected String TAG = getClass().getSimpleName();
+public abstract class SingleBaseFragment extends BaseFragment {
+    protected SingleFragmentActivity activity;
+    protected abstract String title();
+    @Override
+    public void onAttach(Context context) {
+        activity = (SingleFragmentActivity) context;
+        super.onAttach(context);
+    }
 
-    protected abstract @LayoutRes
-    int layoutResId();
+    @Override
+    public void onDetach() {
+        activity = null;
+        super.onDetach();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(layoutResId(), container, false);
-        unbinder = ButterKnife.bind(this, rootView);
-        setHasOptionsMenu(true);
-        initData(inflater, container, savedInstanceState);
+        super.onCreateView(inflater, container, savedInstanceState);
+        setTitle();
         return rootView;
     }
 
     protected void initData(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
     }
 
-
-    @Override
-    public void onDestroy() {
-        unbinder.unbind();
-        super.onDestroy();
+    protected void setTitle() {
+        if (activity.getSupportActionBar() != null && title() != null) {
+            activity.getSupportActionBar().setTitle(title());
+        }
     }
+
 }

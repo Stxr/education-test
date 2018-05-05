@@ -14,6 +14,7 @@ public class Question extends BmobObject {
     private String answer;
     private Choices[] choices;
     private String description;
+//    private int weight;//分数
     private boolean isSelection;//是否是选择题
 
 
@@ -67,6 +68,7 @@ public class Question extends BmobObject {
                 ", answer='" + answer + '\'' +
                 ", choices=" + Arrays.toString(choices) +
                 ", description='" + description + '\'' +
+                ", isSelection=" + isSelection +
                 '}';
     }
 }

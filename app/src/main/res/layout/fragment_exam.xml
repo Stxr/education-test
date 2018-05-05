@@ -3,8 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <TextView
-        android:text="这是考试界面"
+    <Button
+        android:id="@+id/btn_start_exam"
+        android:text="开始考试"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

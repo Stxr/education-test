@@ -10,7 +10,6 @@ import cn.bmob.v3.datatype.BmobRelation;
 public class QuestionBank extends BmobObject {
     private String question;
     private BmobRelation examinee;
-    private BmobRelation paper;
     public String getQuestion() {
         return question;
     }
@@ -35,11 +34,4 @@ public class QuestionBank extends BmobObject {
                 '}';
     }
 
-    public BmobRelation getPaper() {
-        return paper;
-    }
-
-    public void setPaper(BmobRelation paper) {
-        this.paper = paper;
-    }
 }
