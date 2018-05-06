@@ -5,11 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,10 +21,10 @@ import com.stxr.teacher_test.entities.Question;
 import com.stxr.teacher_test.entities.QuestionBank;
 import com.stxr.teacher_test.entities.Score;
 import com.stxr.teacher_test.entities.Student;
-import com.stxr.teacher_test.fragments.IQuestionCallback;
 import com.stxr.teacher_test.fragments.QuestionFragment;
 import com.stxr.teacher_test.utils.MyTimer;
 import com.stxr.teacher_test.utils.ToastUtil;
+import com.stxr.teacher_test.view.MyPagerAdapter;
 import com.stxr.teacher_test.view.MyViewPager;
 
 import java.util.ArrayList;
@@ -42,13 +39,12 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
-import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stxr on 2018/3/31.
  */
 
-public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTimerCallBack, QuestionFragment.AnswerCallBack {
+public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTimerCallBack{
     @BindView(R.id.vp_question)
     public MyViewPager viewPager;
     @BindView(R.id.btn_confirm)
@@ -74,6 +70,7 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
     boolean isAnswerTrue;
     private MyTimer timer;
     private EditText edt_answer;
+    private MyPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,28 +102,32 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
     }
 
     private void setAdapter(final List<Question> questions) {
-        viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                question = questions.get(position);
-                fragment = QuestionFragment.newInstance(question);
-                return fragment;
-            }
-
-            @Override
-            public int getCount() {
-                return questions.size();
-            }
-        });
+        pagerAdapter = new MyPagerAdapter(getSupportFragmentManager(), questions);
+        fragment = pagerAdapter.getFragment();
+        viewPager.setAdapter(pagerAdapter);
         viewPager.setCanScroll(false);
     }
 
     //答题确定按钮
     @OnClick(R.id.btn_confirm)
     void onClick() {
-        if (tv_description == null && (selectedRB == null || edt_answer == null)) {
-            ToastUtil.show(this, "请开始答题");
-            return;
+        fragment = pagerAdapter.getFragment();
+        tv_description = fragment.tv_description;
+        selectedRB = fragment.radioButton;
+        edt_answer = fragment.edt_answer;
+        question = fragment.question;
+        rg_question = fragment.rg_question;
+
+        if (!question.isSelection()) {
+            if (edt_answer.getText().toString().equals("")) {
+                ToastUtil.show(this, "请填写选项");
+                return;
+            }
+        } else {
+            if (!selectedRB.isChecked()) {
+                ToastUtil.show(this, "请填写选项");
+                return;
+            }
         }
         if (viewPager.getCurrentItem() == num - 1) {
             last = true;
@@ -134,11 +135,11 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
         if (paperType.equals(PaperType.PRACTICE)) {
             if (!last) {
                 if (btn_confirm.getText().equals("确定")) {
-                    if (isAnswerTrue) {
+                    if (isAnswerTrue()) {
                         viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
                         right++;
                     } else {
-                        setRadioGroupCheckable(rg_question, false);
+                        setSelectionEnable(false);
                         tv_description.setVisibility(View.VISIBLE);
                         btn_confirm.setText("下一题");
                     }
@@ -148,25 +149,44 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
                 }
             } else {
                 btn_confirm.setEnabled(false);
-                if (isAnswerTrue) {
+                if (isAnswerTrue()) {
                     right++;
                 } else {
-                    setRadioGroupCheckable(rg_question, false);
+                    setSelectionEnable(false);
                     tv_description.setVisibility(View.VISIBLE);
                 }
                 ToastUtil.show(QuestionActivity.this, "没有了");
             }
         } else {
-            if (isAnswerTrue) right++;
+            if (isAnswerTrue()) right++;
             if (!last) {
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
             } else {
                 updateScore();
                 btn_confirm.setEnabled(false);
+                AlertDialog alertDialog = new AlertDialog.Builder(this)
+                        .setMessage("考试结束")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .create();
+                alertDialog.setCancelable(false);
             }
         }
         recordDone(viewPager.getCurrentItem() + 1);
     }
+
+    boolean isAnswerTrue() {
+        if (question.isSelection()) {
+            return question.getAnswer().equals(selectedRB.getText().toString());
+        } else {
+            return question.getAnswer().equals(edt_answer.getText().toString());
+        }
+    }
+
 
     /**
      * 记录
@@ -179,12 +199,16 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
         tv_done.setText(format);
     }
 
-    void setRadioGroupCheckable(RadioGroup radioGroup, boolean checkable) {
+    void setSelectionEnable(boolean enable) {
         if (question.isSelection()) {
-            if (radioGroup != null) {
-                for (int i = 0; i < radioGroup.getChildCount(); i++) {
-                    radioGroup.getChildAt(i).setEnabled(checkable);
+            if (rg_question != null) {
+                for (int i = 0; i < rg_question.getChildCount(); i++) {
+                    rg_question.getChildAt(i).setEnabled(enable);
                 }
+            }
+        } else {
+            if (edt_answer != null) {
+                edt_answer.setEnabled(enable);
             }
         }
     }
@@ -264,16 +288,16 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
         alertDialog.setCancelable(false);
     }
 
-    @Override
-    public void answer(Boolean isTrue, View... views) {
-        isAnswerTrue = isTrue;
-        if (views[0] instanceof TextView) {
-            tv_description = (TextView) views[0];
-        }
-        if (views[1] instanceof RadioButton) {
-            selectedRB = (RadioButton) views[1];
-        } else if (views[1] instanceof EditText) {
-            edt_answer = (EditText) views[1];
-        }
-    }
+//    @Override
+//    public void answer(Boolean isTrue, View... views) {
+//        isAnswerTrue = isTrue;
+//        if (views[0] instanceof TextView) {
+//            tv_description = (TextView) views[0];
+//        }
+//        if (views[1] instanceof RadioButton) {
+//            selectedRB = (RadioButton) views[1];
+//        } else if (views[1] instanceof EditText) {
+//            edt_answer = (EditText) views[1];
+//        }
+//    }
 }

@@ -34,25 +34,26 @@ import butterknife.ButterKnife;
  * Created by stxr on 2018/3/31.
  */
 
-public class QuestionFragment extends Fragment  {
+public class QuestionFragment extends Fragment {
     public static final String QUESTION = "question";
     public static final String PAPER = "paper";
     public static final String TYPE = "questionType";
     private String TAG = "CreateQuestionFragment";
 
     @BindView(R.id.tv_question_title)
-    TextView tv_question_title;
+    public TextView tv_question_title;
     @BindView(R.id.rg_question)
-    RadioGroup rg_question;
+    public RadioGroup rg_question;
     @BindView(R.id.edt_answer)
-    EditText edt_answer;
+    public EditText edt_answer;
     @BindView(R.id.tv_description)
-    TextView tv_description;
+    public TextView tv_description;
 
-    private Question question;
+    public Question question;
     private List<Choices> choices;
     private QuestionType questionType;
-    private AnswerCallBack callback;
+    public RadioButton radioButton;
+    //    private AnswerCallBack callback;
 
     @Nullable
     @Override
@@ -80,7 +81,9 @@ public class QuestionFragment extends Fragment  {
                 RadioButton button = new RadioButton(getActivity());
                 button.setId(i);
                 button.setText(choices.get(i).toString());
-                button.setChecked(true);
+                if (i == 0) {
+                    radioButton = button;
+                }
                 rg_question.addView(button);
             }
             /**
@@ -89,52 +92,52 @@ public class QuestionFragment extends Fragment  {
             rg_question.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup group, int checkedId) {
-                    RadioButton button = getActivity().findViewById(checkedId);
-                    if (button.getText().toString().equals(question.getAnswer())) {
-                        callback.answer(true, tv_description, button);
-                    } else {
-                        callback.answer(false, tv_description, button);
-                    }
+                    radioButton = getActivity().findViewById(checkedId);
+//                    if (button.getText().toString().equals(question.getAnswer())) {
+//                        callback.answer(true, tv_description, button);
+//                    } else {
+//                        callback.answer(false, tv_description, button);
+//                    }
                 }
             });
         } else {//是填空题
             rg_question.setVisibility(View.GONE);
             edt_answer.setVisibility(View.VISIBLE);
-            edt_answer.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (question.getAnswer().equals(s.toString())) {
-                        callback.answer(true, tv_description, edt_answer);
-                    } else {
-                        callback.answer(false, tv_description, edt_answer);
-                    }
-                }
-            });
+//            edt_answer.addTextChangedListener(new TextWatcher() {
+//                @Override
+//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//                }
+//
+//                @Override
+//                public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//                }
+//
+//                @Override
+//                public void afterTextChanged(Editable s) {
+//                    if (question.getAnswer().equals(s.toString())) {
+//                        callback.answer(true, tv_description, edt_answer);
+//                    } else {
+//                        callback.answer(false, tv_description, edt_answer);
+//                    }
+//                }
+//            });
         }
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof AnswerCallBack) {
-            callback = (AnswerCallBack) context;
-        }
+//        if (context instanceof AnswerCallBack) {
+//            callback = (AnswerCallBack) context;
+//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        callback = null;
+//        callback = null;
     }
 
     /**
@@ -152,8 +155,8 @@ public class QuestionFragment extends Fragment  {
     }
 
 
-    public interface AnswerCallBack {
-        void answer(Boolean isTrue, View... views);
-    }
+//    public interface AnswerCallBack {
+//        void answer(Boolean isTrue, View... views);
+//    }
 
 }

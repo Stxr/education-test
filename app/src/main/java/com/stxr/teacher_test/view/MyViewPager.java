@@ -11,6 +11,7 @@ import android.view.MotionEvent;
  */
 
 public class MyViewPager extends ViewPager {
+
     //是否可以左右滑动
     private boolean isCanScroll = false;
 
