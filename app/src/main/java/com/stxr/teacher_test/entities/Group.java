@@ -12,6 +12,7 @@ public class Group extends BmobObject {
     private String name;
     private Admin admin;
     private BmobRelation papers;
+    private BmobRelation announcement;
     public Group() {
 
     }
@@ -48,4 +49,11 @@ public class Group extends BmobObject {
         this.papers = papers;
     }
 
+    public BmobRelation getAnnouncement() {
+        return announcement;
+    }
+
+    public void setAnnouncement(BmobRelation announcement) {
+        this.announcement = announcement;
+    }
 }

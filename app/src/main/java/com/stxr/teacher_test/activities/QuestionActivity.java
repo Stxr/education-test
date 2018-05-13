@@ -44,7 +44,7 @@ import cn.bmob.v3.listener.SaveListener;
  * Created by stxr on 2018/3/31.
  */
 
-public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTimerCallBack{
+public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTimerCallBack {
     @BindView(R.id.vp_question)
     public MyViewPager viewPager;
     @BindView(R.id.btn_confirm)
@@ -173,6 +173,7 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
                             }
                         })
                         .create();
+                alertDialog.show();
                 alertDialog.setCancelable(false);
             }
         }
@@ -285,19 +286,24 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
                     }
                 })
                 .create();
+        alertDialog.show();
         alertDialog.setCancelable(false);
     }
 
-//    @Override
-//    public void answer(Boolean isTrue, View... views) {
-//        isAnswerTrue = isTrue;
-//        if (views[0] instanceof TextView) {
-//            tv_description = (TextView) views[0];
-//        }
-//        if (views[1] instanceof RadioButton) {
-//            selectedRB = (RadioButton) views[1];
-//        } else if (views[1] instanceof EditText) {
-//            edt_answer = (EditText) views[1];
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setMessage("是否提前结束考试？考试成绩将上传")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        updateScore();
+                        finish();
+                    }
+                })
+                .setNegativeButton("取消",null)
+                .create();
+        alertDialog.show();
+        alertDialog.setCancelable(false);
+    }
 }

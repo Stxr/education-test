@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -30,6 +31,7 @@ import cn.bmob.v3.datatype.BmobPointer;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by stxr on 2018/3/27.
@@ -42,6 +44,8 @@ public class ExamFragment extends BaseFragment {
     private String date;
     private Group group;
     private Paper paper;
+    private Exam exam;
+    private Student student;
 
     @Override
     protected int layoutResId() {
@@ -61,11 +65,25 @@ public class ExamFragment extends BaseFragment {
         } else {
             if (check()) {
                 startActivity(QuestionActivity.newInstance(getContext(), paper, PaperType.EXAM));
+                exam.setStudent(Student.getCurrentUser(getContext()));
+                exam.update(new UpdateListener() {
+                    @Override
+                    public void done(BmobException e) {
+                        if (e == null) {
+                            ToastUtil.show(getContext(), "开始考试");
+                        }
+                    }
+                });
             }
         }
     }
 
     boolean check() {
+        if (Objects.equals(exam.getStudent().getObjectId(), student.getObjectId())) {
+            btn_exam.setText("已完成考试");
+            btn_exam.setEnabled(false);
+            return false;
+        }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE);
         try {
             Date examDate = format.parse(this.date);
@@ -75,6 +93,7 @@ public class ExamFragment extends BaseFragment {
             } else {
                 btn_exam.setText("不是考试时间，考试时间为："+date);
                 btn_exam.setEnabled(false);
+                return false;
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -82,6 +101,12 @@ public class ExamFragment extends BaseFragment {
         return false;
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadingData();
+    }
 
     private static boolean isSameDate(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
@@ -102,12 +127,13 @@ public class ExamFragment extends BaseFragment {
     }
 
     void loadingData() {
-        Student student = Student.getCurrentUser(getContext());
+        student = Student.getCurrentUser(getContext());
         BmobQuery<Student> query = new BmobQuery<>();
         query.getObject(student.getObjectId(), new QueryListener<Student>() {
             @Override
             public void done(Student student, BmobException e) {
                 if (e == null) {
+                    //查询考试
                     final BmobQuery<Exam> examQuery = new BmobQuery<>();
                     Group g = student.getGroup();
                     examQuery.addWhereEqualTo("group", new BmobPointer(g));
@@ -117,7 +143,7 @@ public class ExamFragment extends BaseFragment {
                         @Override
                         public void done(List<Exam> list, BmobException e) {
                             if (e == null) {
-                                Exam exam = list.get(0);
+                                exam = list.get(0);
                                 date = exam.getDate();
                                 group = exam.getGroup();
                                 paper = exam.getPaper();

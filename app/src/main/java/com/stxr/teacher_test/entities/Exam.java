@@ -10,6 +10,7 @@ public class Exam extends BmobObject {
     private String date;
     private Group group;
     private Paper paper;
+    private Student student;
     public String getDate() {
         return date;
     }
@@ -41,5 +42,13 @@ public class Exam extends BmobObject {
                 ", group=" + group +
                 ", paper=" + paper +
                 '}';
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }
