@@ -1,6 +1,7 @@
 package com.stxr.teacher_test.utils;
 
 import android.annotation.SuppressLint;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -10,6 +11,7 @@ import com.stxr.teacher_test.entities.Group;
 import com.stxr.teacher_test.entities.Paper;
 import com.stxr.teacher_test.entities.Student;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,7 @@ public class StudentUtil {
     public static final int GROUP = 4;
     public static final int EXAM = 5;
     public static final int INT = 6;
+    public static final String EXAM1 = "exam";
     private Student mStudent;
     private Group mGroup;
     private List<Paper> mPapers;
@@ -63,6 +66,7 @@ public class StudentUtil {
                     getPapers();
                     break;
                 case EXAM:
+//                    mExams = (List<Exam>) msg.getData().getSerializable(EXAM1);
                     Log.e(TAG, "handleMessage: EXAM" + mExams);
                     getExamPapers();
                     break;
@@ -100,9 +104,11 @@ public class StudentUtil {
                 public void done(List<Exam> list, BmobException e) {
                     if (e == null) {
                         mExams = list;
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(EXAM1, (Serializable) list);
                         Message message = handler.obtainMessage();
                         message.what = EXAM;
-                        message.obj = list;
+                        message.setData(bundle);
                         handler.sendEmptyMessage(EXAM);
                     }
                 }
@@ -171,6 +177,7 @@ public class StudentUtil {
                 }
             });
         } else {
+            handler.sendEmptyMessage(PRACTICE_PAPER);
             return mPapers;
         }
         return null;
@@ -190,6 +197,7 @@ public class StudentUtil {
                 }
             });
         } else {
+            handler.sendEmptyMessage(GROUP);
             return mGroup;
         }
         return null;

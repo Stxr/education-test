@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.activities.ListViewActivity;
@@ -33,6 +34,9 @@ public class AccountFragment extends BaseFragment {
 
     private Student student;
     List<Score> scores;
+
+    @BindView(R.id.tv_name)
+    TextView tv_name;
     @Override
     protected int layoutResId() {
         return R.layout.fragment_account;
@@ -43,6 +47,7 @@ public class AccountFragment extends BaseFragment {
         super.initData(inflater, container, savedInstanceState);
         BmobQuery<Score> query = new BmobQuery<>();
         student = Student.getCurrentUser(getActivity());
+        tv_name.setText(student.getUsername());
         query.addWhereEqualTo("Student", new BmobPointer(student));
         query.include("Student,paper");
         query.order("-createdAt");

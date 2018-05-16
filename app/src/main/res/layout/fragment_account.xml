@@ -4,6 +4,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.stxr.teacher_test.fragments.home.AccountFragment">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@drawable/exam"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="180dp" />
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_gravity="center|bottom"
+            android:paddingBottom="16dp"
+            android:textSize="32sp"
+            android:text="名字"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
     <Button
         android:text="学习进度"
         android:id="@+id/btn_progress"

@@ -55,6 +55,18 @@ public class SplashActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume: ");
         handler.sendEmptyMessageDelayed(WHAT, DELAY_MILLIS);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        flag = true;
     }
 }
