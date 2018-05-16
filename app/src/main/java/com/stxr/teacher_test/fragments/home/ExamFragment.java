@@ -1,36 +1,41 @@
 package com.stxr.teacher_test.fragments.home;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.activities.PaperType;
 import com.stxr.teacher_test.activities.QuestionActivity;
+import com.stxr.teacher_test.adapter.PaperAdapter;
 import com.stxr.teacher_test.entities.Exam;
 import com.stxr.teacher_test.entities.Group;
 import com.stxr.teacher_test.entities.Paper;
 import com.stxr.teacher_test.entities.Student;
 import com.stxr.teacher_test.fragments.BaseFragment;
+import com.stxr.teacher_test.utils.StudentUtil;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobPointer;
+import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 /**
@@ -39,13 +44,27 @@ import cn.bmob.v3.listener.UpdateListener;
 
 public class ExamFragment extends BaseFragment {
 
-    @BindView(R.id.btn_start_exam)
-    Button btn_exam;
+    public static final int FINISHED_LOAD = 110;
+    @BindView(R.id.rv_show_paper)
+    RecyclerView rv_show_paper;
     private String date;
     private Group group;
     private Paper paper;
-    private Exam exam;
-    private Student student;
+    private List<Paper> papers = new ArrayList<>();
+    private Exam mExam;
+    private List<Exam> exams;
+    private PaperAdapter adapter;
+    private boolean result;
+
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            adapter.notifyDataSetChanged();
+            Log.e(TAG, "handleMessage: papers: " + papers);
+        }
+    };
 
     @Override
     protected int layoutResId() {
@@ -56,17 +75,22 @@ public class ExamFragment extends BaseFragment {
     protected void initData(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.initData(inflater, container, savedInstanceState);
         loadingData();
+        rv_show_paper.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
     }
 
-    @OnClick(R.id.btn_start_exam)
-    void loadingPaper() {
-        if (date == null || paper == null || group==null) {
+    void loadingPaper(View view) {
+        TextView textView = (TextView) view;
+        if (date == null || paper == null || group == null) {
             ToastUtil.show(getContext(), "没有考试信息");
         } else {
             if (check()) {
+                papers.remove(paper);
                 startActivity(QuestionActivity.newInstance(getContext(), paper, PaperType.EXAM));
-                exam.setStudent(Student.getCurrentUser(getContext()));
-                exam.update(new UpdateListener() {
+                BmobRelation relation = new BmobRelation();
+                relation.add(Student.getCurrentUser(getContext()));
+                mExam.setStudent(relation);
+                mExam.update(new UpdateListener() {
                     @Override
                     public void done(BmobException e) {
                         if (e == null) {
@@ -74,47 +98,38 @@ public class ExamFragment extends BaseFragment {
                         }
                     }
                 });
+//                textView.setText("已完成考试");
+            } else {
+                textView.setText(date+paper);
             }
         }
     }
 
     boolean check() {
-        if (Objects.equals(exam.getStudent().getObjectId(), student.getObjectId())) {
-            btn_exam.setText("已完成考试");
-            btn_exam.setEnabled(false);
-            return false;
-        }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE);
         try {
-            Date examDate = format.parse(this.date);
-            if ( isSameDate(examDate, new Date())) {//是考试时间
-                btn_exam.setEnabled(true);
-                return true;
-            } else {
-                btn_exam.setText("不是考试时间，考试时间为："+date);
-                btn_exam.setEnabled(false);
-                return false;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+            Date examDate = format.parse(ExamFragment.this.date);
+            //是考试时间
+            result = isSameDate(examDate, new Date());
+        } catch (ParseException err) {
+            err.printStackTrace();
         }
-        return false;
+        return result;
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        loadingData();
+        adapter.notifyDataSetChanged();
     }
 
     private static boolean isSameDate(Date date1, Date date2) {
         Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
-
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
-
+        Log.e("ExamFragment", "isSameDate() called with: date1 = [" + date1 + "], date2 = [" + date2 + "]");
         boolean isSameYear = cal1.get(Calendar.YEAR) == cal2
                 .get(Calendar.YEAR);
         boolean isSameMonth = isSameYear
@@ -127,33 +142,30 @@ public class ExamFragment extends BaseFragment {
     }
 
     void loadingData() {
-        student = Student.getCurrentUser(getContext());
-        BmobQuery<Student> query = new BmobQuery<>();
-        query.getObject(student.getObjectId(), new QueryListener<Student>() {
+        exams = StudentUtil.get().getExams();
+        papers = StudentUtil.get().getExamPapers();
+        Log.e(TAG, "papers: " + papers);
+        adapter = new PaperAdapter(papers);
+        adapter.setOnclickListener(new PaperAdapter.OnclickListener() {
             @Override
-            public void done(Student student, BmobException e) {
-                if (e == null) {
-                    //查询考试
-                    final BmobQuery<Exam> examQuery = new BmobQuery<>();
-                    Group g = student.getGroup();
-                    examQuery.addWhereEqualTo("group", new BmobPointer(g));
-                    examQuery.include("paper,group");
-                    examQuery.order("-createdAt");
-                    examQuery.findObjects(new FindListener<Exam>() {
-                        @Override
-                        public void done(List<Exam> list, BmobException e) {
-                            if (e == null) {
-                                exam = list.get(0);
-                                date = exam.getDate();
-                                group = exam.getGroup();
-                                paper = exam.getPaper();
-                                check();
-                            }
-                        }
-                    });
+            public void onClick(Paper paper, View view) {
+                int i = papers.indexOf(paper);
+                Log.e(TAG, "-----papers:" + papers);
+                Log.e(TAG, "-----exams:" + exams);
+                for (Exam exam : exams) {
+                    if (exam.getPaper().equals(paper)) {
+                        mExam = exam;
+                        break;
+                    }
                 }
+                date = mExam.getDate();
+                group = mExam.getGroup();
+                ExamFragment.this.paper = paper;
+                loadingPaper(view);
             }
         });
+        rv_show_paper.setAdapter(adapter);
+        handler.sendEmptyMessageDelayed(FINISHED_LOAD, 500);
     }
 
 

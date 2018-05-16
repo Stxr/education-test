@@ -2,39 +2,94 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <Button
-        android:id="@+id/btn_announcement"
-        android:text="发布公告"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btn_create_account"
-        android:text="建立账号"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <Button
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_background"
+            android:id="@+id/btn_announcement"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="发布公告"
+            android:textSize="16sp" />
 
-    <Button
-        android:id="@+id/btn_create_question"
-        android:text="发布题库"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btn_distribute"
-        android:text="分配题库"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btn_exam_date"
-        android:text="发布考试日期"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/btn_log_out"
-        android:text="退出登录"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <Button
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_background"
+            android:id="@+id/btn_create_account"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="建立账号"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_background"
+            android:id="@+id/btn_create_question"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="发布题库"
+            android:textSize="16sp" />
+
+        <Button
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_background"
+            android:id="@+id/btn_distribute"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="分配题库"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_background"
+            android:id="@+id/btn_exam_date"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="发布考试日期"
+            android:textSize="16sp" />
+
+        <Button
+            android:layout_margin="8dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/btn_background"
+            android:id="@+id/btn_log_out"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:text="退出登录"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
 </LinearLayout>

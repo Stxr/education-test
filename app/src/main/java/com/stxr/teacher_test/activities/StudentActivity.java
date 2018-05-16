@@ -22,6 +22,7 @@ import com.stxr.teacher_test.fragments.home.AccountFragment;
 import com.stxr.teacher_test.fragments.home.ExamFragment;
 import com.stxr.teacher_test.fragments.home.PracticeFragment;
 import com.stxr.teacher_test.utils.ShareUtil;
+import com.stxr.teacher_test.utils.StudentUtil;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class StudentActivity extends AppCompatActivity {
     private List<Fragment> fragments = new ArrayList<>();
     private BottomNavigationView navigation;
     public static long FIRST_TIME = 0;
-
+    public boolean flag = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

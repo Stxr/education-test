@@ -6,10 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.stxr.teacher_test.R;
 import com.stxr.teacher_test.admin.AdminActivity;
 import com.stxr.teacher_test.entities.Student;
+import com.stxr.teacher_test.utils.StudentUtil;
 
 /**
  * Created by stxr on 2018/3/31.
@@ -19,6 +21,8 @@ import com.stxr.teacher_test.entities.Student;
 public class SplashActivity extends Activity {
     public static final int WHAT = 12;
     public static final int DELAY_MILLIS = 1500;
+    public static final String TAG = "SplashActivity";
+    private boolean flag = true;
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler(){
         @Override
@@ -27,11 +31,23 @@ public class SplashActivity extends Activity {
             if (msg.what == WHAT) {
                 //判断跳转
                 if (Student.getCurrentUser(SplashActivity.this) != null) {
-                    startActivity(StudentActivity.newInstance(SplashActivity.this));
+                    StudentUtil.get().setStudent(Student.getCurrentUser(SplashActivity.this));
+                    StudentUtil.get().setOnCallBack(new StudentUtil.CallBack() {
+                        @Override
+                        public void onSuccess(StudentUtil studentUtil, boolean isSuccess) {
+                            if (isSuccess && flag) {
+                                flag = false;
+                                startActivity(StudentActivity.newInstance(SplashActivity.this));
+                                finish();
+                            } else {
+                                Log.e(TAG, "isSuccess: " + isSuccess + "flag: " + flag);
+                            }
+                        }
+                    });
                 } else {
                     startActivity(AdminActivity.newInstance(SplashActivity.this));
+                    finish();
                 }
-                finish();
             }
         }
     };

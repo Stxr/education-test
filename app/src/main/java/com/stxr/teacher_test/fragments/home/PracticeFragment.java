@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.google.gson.Gson;
 import com.stxr.teacher_test.R;
+import com.stxr.teacher_test.activities.ListViewActivity;
 import com.stxr.teacher_test.activities.PaperType;
 import com.stxr.teacher_test.activities.QuestionActivity;
 import com.stxr.teacher_test.adapter.PaperAdapter;
@@ -22,6 +23,7 @@ import com.stxr.teacher_test.entities.QuestionBank;
 import com.stxr.teacher_test.entities.Student;
 import com.stxr.teacher_test.fragments.BaseFragment;
 import com.stxr.teacher_test.fragments.QuestionFragment;
+import com.stxr.teacher_test.utils.StudentUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -57,46 +59,20 @@ public class PracticeFragment extends BaseFragment {
     protected void initData(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.initData(inflater, container, savedInstanceState);
         rv_show_question.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-        if (paperList != null) {
-            rv_show_question.setAdapter(new PaperAdapter(paperList));
-        } else {
-            query();
-        }
+        query();
     }
 
     private void query() {
-        Student student = Student.getCurrentUser(getActivity());
-        BmobQuery<Student> studentQuery = new BmobQuery<>();
-        studentQuery.getObject(student.getObjectId(), new QueryListener<Student>() {
+        paperList = StudentUtil.get().getPapers();
+        Log.e(TAG, "paperList: " + paperList);
+        adapter = new PaperAdapter(paperList);
+        adapter.setOnclickListener(new PaperAdapter.OnclickListener() {
             @Override
-            public void done(Student student, BmobException e) {
-                if (e == null) {
-                    String objectId = student.getGroup().getObjectId();
-                    BmobQuery<Paper> query = new BmobQuery<>();
-                    Group group = new Group();
-                    group.setObjectId(objectId);
-                    Log.e(TAG, "objectId:" + objectId);
-                    query.addWhereRelatedTo("papers", new BmobPointer(group));
-                    query.findObjects(new FindListener<Paper>() {
-                        @Override
-                        public void done(List<Paper> papers, BmobException e) {
-                            if (e == null) {
-                                paperList = papers;
-//                                Log.e(TAG, "done:" + list.toString());
-                                adapter = new PaperAdapter(papers);
-                                adapter.setOnclickListener(new PaperAdapter.OnclickListener() {
-                                    @Override
-                                    public void onClick(Paper paper) {
-                                      startActivity(QuestionActivity.newInstance(getActivity(), paper, PaperType.PRACTICE));
-                                    }
-                                });
-                                rv_show_question.setAdapter(adapter);
-                            }
-                        }
-                    });
-                }
+            public void onClick(Paper paper,View view) {
+                startActivity(QuestionActivity.newInstance(getActivity(), paper, PaperType.PRACTICE));
             }
         });
+        rv_show_question.setAdapter(adapter);
     }
 
 

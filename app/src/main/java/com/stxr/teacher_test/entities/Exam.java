@@ -1,6 +1,7 @@
 package com.stxr.teacher_test.entities;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobRelation;
 
 /**
  * Created by stxr on 2018/5/4.
@@ -10,7 +11,7 @@ public class Exam extends BmobObject {
     private String date;
     private Group group;
     private Paper paper;
-    private Student student;
+    private BmobRelation student;
     public String getDate() {
         return date;
     }
@@ -44,11 +45,11 @@ public class Exam extends BmobObject {
                 '}';
     }
 
-    public Student getStudent() {
+    public BmobRelation getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(BmobRelation student) {
         this.student = student;
     }
 }

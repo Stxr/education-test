@@ -1,6 +1,7 @@
 package com.stxr.teacher_test.entities;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.stxr.teacher_test.utils.ShareUtil;
 
@@ -13,6 +14,7 @@ import cn.bmob.v3.datatype.BmobRelation;
 public class Student extends MyUser {
     private Group group;
     private BmobRelation papers;
+
     public static Student getCurrentUser(Context context) {
         String objectId = (String) ShareUtil.get(context, "objectId", "");
         String username = (String) ShareUtil.get(context, "username", "");
@@ -50,4 +52,14 @@ public class Student extends MyUser {
     public String toString() {
         return getUsername();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        Log.e("Student", "getObjectId: " + getObjectId() + "getObjectId" + student.getObjectId());
+        return getObjectId().equals(student.getObjectId());
+    }
+
 }

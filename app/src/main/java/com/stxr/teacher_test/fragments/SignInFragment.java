@@ -15,6 +15,7 @@ import com.stxr.teacher_test.admin.SignUpFragment;
 import com.stxr.teacher_test.entities.Admin;
 import com.stxr.teacher_test.entities.MyUser;
 import com.stxr.teacher_test.entities.Student;
+import com.stxr.teacher_test.utils.StudentUtil;
 import com.stxr.teacher_test.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -99,6 +100,7 @@ public class SignInFragment extends SingleBaseFragment {
                 @Override
                 public void done(Student student, BmobException e) {
                     if (e == null) {
+                        StudentUtil.get().setStudent(student);
                         activity.startActivity(StudentActivity.newInstance(activity));
                         activity.popBackStack();
                     } else {

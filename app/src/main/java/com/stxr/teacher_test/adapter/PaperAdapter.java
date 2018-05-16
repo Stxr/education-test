@@ -35,14 +35,14 @@ public class PaperAdapter extends RecyclerView.Adapter<PaperAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         final Paper paper = papers.get(position);
         holder.tv_paper_name.setText(paper.getName());
         holder.tv_paper_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onClick(paper);
+                    listener.onClick(paper,holder.tv_paper_name);
                 }
             }
         });
@@ -50,12 +50,15 @@ public class PaperAdapter extends RecyclerView.Adapter<PaperAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return papers.size();
+        if (papers != null) {
+            return papers.size();
+        }
+        return 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+   public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_paper_name)
-        TextView tv_paper_name;
+       public TextView tv_paper_name;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -68,7 +71,7 @@ public class PaperAdapter extends RecyclerView.Adapter<PaperAdapter.ViewHolder> 
     }
 
     public interface OnclickListener {
-        void onClick(Paper paper);
+        void onClick(Paper paper,View view);
     }
 
 }

@@ -27,6 +27,7 @@ import com.stxr.teacher_test.utils.ToastUtil;
 import com.stxr.teacher_test.view.MyPagerAdapter;
 import com.stxr.teacher_test.view.MyViewPager;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -254,10 +255,11 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
 
     void updateScore() {
         double s = ((double) right) / num * 100;
+        double v = (double) Math.round(s * 100) / 100;
         Score score = new Score();
         score.setPaper(paper);
         score.setStudent(Student.getCurrentUser(this));
-        score.setScore(s);
+        score.setScore(v);
         score.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -292,18 +294,22 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
 
     @Override
     public void onBackPressed() {
-        AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setMessage("是否提前结束考试？考试成绩将上传")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        updateScore();
-                        finish();
-                    }
-                })
-                .setNegativeButton("取消",null)
-                .create();
-        alertDialog.show();
-        alertDialog.setCancelable(false);
+        if (paperType == PaperType.EXAM) {
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setMessage("是否提前结束考试？考试成绩将上传")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            updateScore();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("取消", null)
+                    .create();
+            alertDialog.show();
+            alertDialog.setCancelable(false);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
