@@ -10,7 +10,7 @@
     <TextView
         android:layout_gravity="center"
         android:textSize="24dp"
-        android:id="@+id/tv_paper_name"
+        android:id="@+id/tv_announce_title"
         android:gravity="center"
         android:hint="试卷"
         android:layout_width="match_parent"

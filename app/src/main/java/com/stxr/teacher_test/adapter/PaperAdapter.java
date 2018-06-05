@@ -57,7 +57,7 @@ public class PaperAdapter extends RecyclerView.Adapter<PaperAdapter.ViewHolder> 
     }
 
    public class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.tv_paper_name)
+        @BindView(R.id.tv_announce_title)
        public TextView tv_paper_name;
 
         public ViewHolder(View itemView) {

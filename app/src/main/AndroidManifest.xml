@@ -41,6 +41,7 @@
         <activity android:name=".activities.QuestionActivity" />
         <activity android:name=".admin.AdminActivity" />
         <activity android:name=".activities.ListViewActivity" />
+        <activity android:name=".activities.AnnounceListActivity" />
     </application>
 
 </manifest>

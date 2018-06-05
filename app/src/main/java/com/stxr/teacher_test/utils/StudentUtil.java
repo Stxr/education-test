@@ -68,7 +68,11 @@ public class StudentUtil {
                 case EXAM:
 //                    mExams = (List<Exam>) msg.getData().getSerializable(EXAM1);
                     Log.e(TAG, "handleMessage: EXAM" + mExams);
-                    getExamPapers();
+                    if (mExams.size() != 0) {
+                        getExamPapers();
+                    } else {
+                        flagExam = true;
+                    }
                     break;
                 case INT:
                     Paper paper = (Paper) msg.obj;
@@ -82,13 +86,20 @@ public class StudentUtil {
                 case PRACTICE_PAPER:
                     flagPractice = true;
                     Log.e(TAG, "handleMessage: flagPractice");
-                    callBack.onSuccess(StudentUtil.get(), flagExam);
+                    if (mExams.size() == 0) {
+                        flagExam = true;
+                    }
+                    if (callBack != null) {
+                        callBack.onSuccess(StudentUtil.get(), flagExam);
+                    }
                     break;
                 case EXAM_PAPER:
                     Log.e(TAG, "EXAM_PAPER: " + flagExam);
                     flagExam = true;
                     Log.e(TAG, "handleMessage: flagExam");
-                    callBack.onSuccess(StudentUtil.get(), flagPractice);
+                    if (callBack != null) {
+                        callBack.onSuccess(StudentUtil.get(), flagPractice);
+                    }
                     break;
             }
         }
@@ -133,6 +144,8 @@ public class StudentUtil {
                     @Override
                     public void done(List<Student> list, BmobException e) {
                         if (e == null) {
+                            Log.d(TAG, "done() called with: list = [" + list + "], e = [" + e + "]");
+                            //学生还没做
                             if (!list.contains(mStudent)) {
                                 Message message = handler.obtainMessage();
                                 message.obj = exam.getPaper();

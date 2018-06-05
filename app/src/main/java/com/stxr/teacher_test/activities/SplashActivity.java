@@ -31,7 +31,6 @@ public class SplashActivity extends Activity {
             if (msg.what == WHAT) {
                 //判断跳转
                 if (Student.getCurrentUser(SplashActivity.this) != null) {
-                    StudentUtil.get().setStudent(Student.getCurrentUser(SplashActivity.this));
                     StudentUtil.get().setOnCallBack(new StudentUtil.CallBack() {
                         @Override
                         public void onSuccess(StudentUtil studentUtil, boolean isSuccess) {
@@ -44,6 +43,7 @@ public class SplashActivity extends Activity {
                             }
                         }
                     });
+                    StudentUtil.get().setStudent(Student.getCurrentUser(SplashActivity.this));
                 } else {
                     startActivity(AdminActivity.newInstance(SplashActivity.this));
                     finish();

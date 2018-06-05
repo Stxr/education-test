@@ -27,7 +27,6 @@ import com.stxr.teacher_test.utils.ToastUtil;
 import com.stxr.teacher_test.view.MyPagerAdapter;
 import com.stxr.teacher_test.view.MyViewPager;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -50,7 +49,7 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
     public MyViewPager viewPager;
     @BindView(R.id.btn_confirm)
     public Button btn_confirm;
-    @BindView(R.id.tv_time)
+    @BindView(R.id.tv_announce_admin)
     public TextView tv_time;
     @BindView(R.id.tv_done)
     public TextView tv_done;
