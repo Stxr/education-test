@@ -114,18 +114,18 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
     void onClick() {
         fragment = pagerAdapter.getFragment();
         tv_description = fragment.tv_description;
-        selectedRB = fragment.radioButton;
         edt_answer = fragment.edt_answer;
         question = fragment.question;
         rg_question = fragment.rg_question;
+        selectedRB = getSelectedRB(rg_question);
 
         if (!question.isSelection()) {
             if (edt_answer.getText().toString().equals("")) {
-                ToastUtil.show(this, "请填写选项");
+                ToastUtil.show(this, "请填写选项.");
                 return;
             }
         } else {
-            if (!selectedRB.isChecked()) {
+            if (selectedRB==null) {
                 ToastUtil.show(this, "请填写选项");
                 return;
             }
@@ -213,6 +213,16 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
                 edt_answer.setEnabled(enable);
             }
         }
+    }
+
+    private RadioButton getSelectedRB(RadioGroup radioGroup) {
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            RadioButton childAt = (RadioButton) radioGroup.getChildAt(i);
+            if (childAt.isChecked()) {
+                return childAt;
+            }
+        }
+        return null;
     }
 
     /**

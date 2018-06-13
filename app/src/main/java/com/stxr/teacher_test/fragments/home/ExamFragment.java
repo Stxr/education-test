@@ -110,7 +110,7 @@ public class ExamFragment extends BaseFragment {
                 });
 //                textView.setText("已完成考试");
             } else {
-                textView.setText(date+paper);
+                textView.setText(date + paper);
             }
         }
     }

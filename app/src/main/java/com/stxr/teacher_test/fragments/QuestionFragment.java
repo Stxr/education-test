@@ -53,6 +53,7 @@ public class QuestionFragment extends Fragment {
     private List<Choices> choices;
     private QuestionType questionType;
     public RadioButton radioButton;
+
     //    private AnswerCallBack callback;
 
     @Nullable
