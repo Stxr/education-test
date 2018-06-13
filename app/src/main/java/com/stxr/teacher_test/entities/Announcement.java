@@ -34,4 +34,5 @@ public class Announcement extends BmobObject{
     public void setAdmin(Admin admin) {
         this.admin = admin;
     }
+
 }

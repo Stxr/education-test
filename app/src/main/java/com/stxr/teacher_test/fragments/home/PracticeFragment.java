@@ -3,6 +3,7 @@ package com.stxr.teacher_test.fragments.home;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -49,6 +50,8 @@ public class PracticeFragment extends BaseFragment {
 
     @BindView(R.id.rv_show_question)
     RecyclerView rv_show_question;
+    @BindView(R.id.srl_practice)
+    SwipeRefreshLayout srl_practice;
 
     @Override
     protected int layoutResId() {
@@ -60,6 +63,24 @@ public class PracticeFragment extends BaseFragment {
         super.initData(inflater, container, savedInstanceState);
         rv_show_question.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         query();
+        srl_practice.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                BmobQuery<Paper> query = new BmobQuery<>();
+                query.addWhereRelatedTo("papers", new BmobPointer(StudentUtil.get().getGroup()));
+                query.findObjects(new FindListener<Paper>() {
+                    @Override
+                    public void done(List<Paper> list, BmobException e) {
+                        if (e == null) {
+                            paperList.clear();
+                            paperList.addAll(list);
+                            adapter.notifyDataSetChanged();
+                            srl_practice.setRefreshing(false);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void query() {

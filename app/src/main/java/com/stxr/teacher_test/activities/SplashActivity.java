@@ -20,11 +20,11 @@ import com.stxr.teacher_test.utils.StudentUtil;
 
 public class SplashActivity extends Activity {
     public static final int WHAT = 12;
-    public static final int DELAY_MILLIS = 1500;
+    public static final int DELAY_MILLIS = 500;
     public static final String TAG = "SplashActivity";
     private boolean flag = true;
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler(){
+    public  Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);

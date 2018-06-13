@@ -79,6 +79,7 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
         ButterKnife.bind(this);
         initData();
         query();
+
     }
 
     private void initData() {
@@ -228,6 +229,7 @@ public class QuestionActivity extends AppCompatActivity implements MyTimer.OnTim
                         questionList.add(parseQuestion(question.getQuestion()));
                     }
                     num = list.size();
+                    recordDone(0);
                     setAdapter(questionList);
                 }
             }

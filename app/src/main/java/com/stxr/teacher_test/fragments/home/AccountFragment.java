@@ -68,6 +68,7 @@ public class AccountFragment extends BaseFragment {
             }
         });
         BmobQuery<Announcement> announcementBmobQuery = new BmobQuery<>();
+        announcementBmobQuery.include("admin");
         announcementBmobQuery.findObjects(new FindListener<Announcement>() {
             @Override
             public void done(List<Announcement> list, BmobException e) {

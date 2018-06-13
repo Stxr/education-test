@@ -39,7 +39,7 @@ public class ShowAnnouncement extends SingleBaseFragment{
         announcements = (List<Announcement>) arguments.getSerializable(ANNOUNCEMENT);
         for (Announcement announce : announcements) {
             HashMap<String, String> map = new HashMap<>();
-            map.put("admin", String.valueOf(announce.getAdmin()));
+            map.put("admin", String.valueOf("发布人："+announce.getAdmin().getUsername()));
             map.put("content", String.valueOf(announce.getContent()));
             map.put("title", String.valueOf(announce.getTitle()));
             list.add(map);

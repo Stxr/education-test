@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -38,6 +39,8 @@ import cn.bmob.v3.datatype.BmobRelation;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
+import static com.stxr.teacher_test.R2.id.srl_practice;
+
 /**
  * Created by stxr on 2018/3/27.
  */
@@ -45,6 +48,8 @@ import cn.bmob.v3.listener.UpdateListener;
 public class ExamFragment extends BaseFragment {
 
     public static final int FINISHED_LOAD = 110;
+    @BindView(R.id.srl_exam)
+    SwipeRefreshLayout srl_exam;
     @BindView(R.id.rv_show_paper)
     RecyclerView rv_show_paper;
     private String date;
@@ -76,7 +81,12 @@ public class ExamFragment extends BaseFragment {
         super.initData(inflater, container, savedInstanceState);
         loadingData();
         rv_show_paper.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
+        srl_exam.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     void loadingPaper(View view) {
